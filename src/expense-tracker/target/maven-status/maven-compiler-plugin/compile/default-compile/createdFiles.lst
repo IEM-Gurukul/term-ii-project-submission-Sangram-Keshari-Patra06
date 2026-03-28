@@ -2,6 +2,7 @@ com\expensetracker\ui\panels\MergedTransactionPanel$4.class
 com\expensetracker\ui\panels\TransactionPanel.class
 com\expensetracker\ui\UIUpdateManager.class
 com\expensetracker\ui\panels\HistoryPanel$3.class
+com\expensetracker\ui\panels\MergedTransactionPanel$6.class
 com\expensetracker\ui\panels\ExpenseChartPanel.class
 com\expensetracker\ui\UIUpdateListener.class
 com\expensetracker\services\CategoryService.class

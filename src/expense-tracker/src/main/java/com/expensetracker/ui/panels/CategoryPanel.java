@@ -2,18 +2,24 @@ package com.expensetracker.ui.panels;
 
 import com.expensetracker.exceptions.DatabaseException;
 import com.expensetracker.models.Category;
+import com.expensetracker.models.Transaction;
 import com.expensetracker.services.CategoryService;
+import com.expensetracker.services.TransactionService;
 import com.expensetracker.ui.UIUpdateManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Panel for managing categories with professional monochromatic design
  */
 public class CategoryPanel extends JPanel {
     private CategoryService categoryService;
+    private TransactionService transactionService;
     private JTable categoryTable;
     private DefaultTableModel tableModel;
 
@@ -31,6 +37,7 @@ public class CategoryPanel extends JPanel {
 
     public CategoryPanel() throws DatabaseException {
         this.categoryService = new CategoryService();
+        this.transactionService = new TransactionService();
         setupUI();
         loadCategories();
     }
@@ -49,7 +56,7 @@ public class CategoryPanel extends JPanel {
         add(formPanel, BorderLayout.WEST);
 
         // Table
-        String[] columnNames = {"ID", "Name", "Type", "Custom"};
+        String[] columnNames = {"ID", "Name", "Type", "Amount"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -201,12 +208,27 @@ public class CategoryPanel extends JPanel {
     private void loadCategories() {
         try {
             tableModel.setRowCount(0);
+            
+            // Calculate total amount for each category
+            Map<Integer, Double> categoryAmounts = new HashMap<>();
+            List<Transaction> allTransactions = transactionService.getAllTransactions();
+            
+            for (Transaction t : allTransactions) {
+                int categoryId = t.getCategory().getId();
+                double amount = categoryAmounts.getOrDefault(categoryId, 0.0);
+                categoryAmounts.put(categoryId, amount + t.getAmount());
+            }
+            
             for (Category category : categoryService.getAllCategories()) {
+                double amount = categoryAmounts.getOrDefault(category.getId(), 0.0);
+                String emoji = "INCOME".equals(category.getType()) ? "↑" : "↓";
+                String amountDisplay = String.format("%s $%.2f", emoji, amount);
+                
                 tableModel.addRow(new Object[]{
                     category.getId(),
                     category.getName(),
                     category.getType(),
-                    category.isCustom() ? "Yes" : "No"
+                    amountDisplay
                 });
             }
         } catch (DatabaseException e) {

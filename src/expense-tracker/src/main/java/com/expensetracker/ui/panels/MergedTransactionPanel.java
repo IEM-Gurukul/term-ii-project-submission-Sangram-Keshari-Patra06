@@ -119,26 +119,44 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
         panel.add(formTitleLabel);
         panel.add(Box.createVerticalStrut(15));
 
-        // Main form container with GridLayout
-        JPanel formContainer = new JPanel();
-        formContainer.setLayout(new GridLayout(2, 3, 15, 12));
-        formContainer.setBackground(CARD_BG);
-
         // Type selector
         JComboBox<String> typeComboBox = createStyledComboBox(new String[]{"INCOME", "EXPENSE"});
 
         // Amount field
         JTextField amountField = createStyledTextField("0.00");
 
-        // Description field
-        JTextField descriptionField = createStyledTextField("Enter description");
-
         // Category selector
         JComboBox<Category> categoryComboBox = createStyledComboBox();
         updateCategories(categoryComboBox, "INCOME");
 
-        // Source/Payment method field
-        JTextField sourceField = createStyledTextField("Source");
+        // First row: Type, Amount, Category (thin design)
+        JPanel firstRowContainer = new JPanel();
+        firstRowContainer.setLayout(new GridLayout(1, 3, 12, 0));
+        firstRowContainer.setBackground(CARD_BG);
+
+        firstRowContainer.add(createLabeledComponent("Type:", typeComboBox));
+        firstRowContainer.add(createLabeledComponent("Amount ($):", amountField));
+        firstRowContainer.add(createLabeledComponent("Category:", categoryComboBox));
+
+        panel.add(firstRowContainer);
+        panel.add(Box.createVerticalStrut(15));
+
+        // Description field (larger space)
+        JTextArea descriptionField = createStyledTextArea("Enter detailed description...");
+
+        // Second row: Description (with larger space)
+        JPanel secondRowContainer = new JPanel();
+        secondRowContainer.setLayout(new BorderLayout());
+        secondRowContainer.setBackground(CARD_BG);
+
+        JLabel descLabel = new JLabel("Description:");
+        descLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        descLabel.setForeground(PRIMARY_DARK);
+        secondRowContainer.add(descLabel, BorderLayout.NORTH);
+        secondRowContainer.add(descriptionField, BorderLayout.CENTER);
+
+        panel.add(secondRowContainer);
+        panel.add(Box.createVerticalStrut(15));
 
         // Action buttons container
         JPanel buttonPanel = new JPanel();
@@ -151,15 +169,7 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
         buttonPanel.add(addButton);
         buttonPanel.add(clearButton);
 
-        // Add labeled components
-        formContainer.add(createLabeledComponent("Type:", typeComboBox));
-        formContainer.add(createLabeledComponent("Amount ($):", amountField));
-        formContainer.add(createLabeledComponent("Description:", descriptionField));
-        formContainer.add(createLabeledComponent("Category:", categoryComboBox));
-        formContainer.add(createLabeledComponent("Source:", sourceField));
-        formContainer.add(buttonPanel);
-
-        panel.add(formContainer);
+        panel.add(buttonPanel);
 
         // Update category when type changes
         typeComboBox.addActionListener(e -> updateCategories(categoryComboBox, (String) typeComboBox.getSelectedItem()));
@@ -171,7 +181,6 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
                 double amount = Double.parseDouble(amountField.getText());
                 String description = descriptionField.getText().trim();
                 Category category = (Category) categoryComboBox.getSelectedItem();
-                String source = sourceField.getText().trim();
 
                 if (amount <= 0) {
                     showMessage("Amount must be greater than 0", "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -184,9 +193,9 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
 
                 Transaction transaction;
                 if ("INCOME".equals(type)) {
-                    transaction = new Income(amount, description, LocalDateTime.now(), category, source);
+                    transaction = new Income(amount, description, LocalDateTime.now(), category, "");
                 } else {
-                    transaction = new Expense(amount, description, LocalDateTime.now(), category, source);
+                    transaction = new Expense(amount, description, LocalDateTime.now(), category, "");
                 }
 
                 transactionService.createTransaction(transaction);
@@ -196,7 +205,6 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
                 // Clear fields
                 amountField.setText("0.00");
                 descriptionField.setText("");
-                sourceField.setText("");
                 typeComboBox.setSelectedIndex(0);
                 loadTransactions();
             } catch (NumberFormatException ex) {
@@ -210,7 +218,6 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
         clearButton.addActionListener(e -> {
             amountField.setText("0.00");
             descriptionField.setText("");
-            sourceField.setText("");
             typeComboBox.setSelectedIndex(0);
         });
 
@@ -336,6 +343,39 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
         });
 
         return field;
+    }
+
+    private JTextArea createStyledTextArea(String placeholder) {
+        JTextArea area = new JTextArea(4, 30);
+        area.setText(placeholder);
+        area.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        area.setBackground(INPUT_BG);
+        area.setForeground(TEXT_SECONDARY);
+        area.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setMargin(new Insets(8, 8, 8, 8));
+
+        // Placeholder effect
+        area.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (area.getText().equals(placeholder)) {
+                    area.setText("");
+                    area.setForeground(TEXT_PRIMARY);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (area.getText().isEmpty()) {
+                    area.setForeground(TEXT_SECONDARY);
+                    area.setText(placeholder);
+                }
+            }
+        });
+
+        return area;
     }
 
     private JComboBox<String> createStyledComboBox(String[] items) {

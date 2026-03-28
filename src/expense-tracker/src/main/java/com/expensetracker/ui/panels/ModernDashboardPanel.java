@@ -208,7 +208,7 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
 
     private JPanel createChartsPanel() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 1, 15, 15));
+        panel.setLayout(new GridLayout(1, 2, 15, 15));
         panel.setBackground(BG_COLOR);
 
         try {
