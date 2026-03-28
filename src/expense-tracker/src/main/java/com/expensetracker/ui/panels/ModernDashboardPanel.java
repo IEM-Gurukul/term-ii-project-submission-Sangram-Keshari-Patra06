@@ -1,8 +1,10 @@
 package com.expensetracker.ui.panels;
 
 import com.expensetracker.exceptions.DatabaseException;
+import com.expensetracker.models.Transaction;
 import com.expensetracker.services.DashboardService;
 import com.expensetracker.services.ReportService;
+import com.expensetracker.services.TransactionService;
 import com.expensetracker.ui.UIUpdateListener;
 import com.expensetracker.ui.UIUpdateManager;
 import com.expensetracker.utils.CurrencyUtils;
@@ -31,6 +33,7 @@ import java.util.*;
 public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
     private DashboardService dashboardService;
     private ReportService reportService;
+    private TransactionService transactionService;
     private JLabel balanceLabel;
     private JLabel incomeLabel;
     private JLabel expenseLabel;
@@ -38,6 +41,7 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
     private ChartPanel chartPanel;
     private ChartPanel barChartPanel;
     private JComboBox<String> timePeriodCombo;
+    private JComboBox<String> pieTypeCombo;
     private java.util.Timer refreshTimer;
 
     // Professional Monochromatic Color Scheme
@@ -55,6 +59,7 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
     public ModernDashboardPanel() throws DatabaseException {
         this.dashboardService = new DashboardService();
         this.reportService = new ReportService();
+        this.transactionService = new TransactionService();
         setupUI();
         startAutoRefresh();
         UIUpdateManager.getInstance().registerListener(this);
@@ -65,7 +70,7 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         setBackground(BG_COLOR);
 
-        // Header with Title and Time Period Selector
+        // Header with Title Only
         JPanel headerPanel = createHeaderPanel();
         add(headerPanel, BorderLayout.NORTH);
 
@@ -78,7 +83,11 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         JPanel statsPanel = createStatsPanel();
         contentPanel.add(statsPanel, BorderLayout.NORTH);
 
-        // Charts Panel
+        // Period Selector Panel (below stats)
+        JPanel periodPanel = createPeriodPanel();
+        contentPanel.add(periodPanel, BorderLayout.SOUTH);
+
+        // Charts Panel (center)
         JPanel chartsPanel = createChartsPanel();
         contentPanel.add(chartsPanel, BorderLayout.CENTER);
 
@@ -91,7 +100,7 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setBackground(PRIMARY_DARK);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         // Left: Title and Subtitle
         JPanel titlePanel = new JPanel();
@@ -111,15 +120,17 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         titlePanel.add(subtitleLabel);
 
         panel.add(titlePanel, BorderLayout.WEST);
+        return panel;
+    }
 
-        // Right: Time Period Selector
-        JPanel controlPanel = new JPanel();
-        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.X_AXIS));
-        controlPanel.setBackground(PRIMARY_DARK);
+    private JPanel createPeriodPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        panel.setBackground(BG_COLOR);
 
-        JLabel filterLabel = new JLabel("Period: ");
-        filterLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        filterLabel.setForeground(PRIMARY_LIGHT);
+        JLabel filterLabel = new JLabel("Time Period: ");
+        filterLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        filterLabel.setForeground(PRIMARY_DARK);
 
         String[] timePeriods = {"Today", "Week", "Month", "All Time"};
         timePeriodCombo = new JComboBox<>(timePeriods);
@@ -129,11 +140,8 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         timePeriodCombo.setFocusable(false);
         timePeriodCombo.addActionListener(e -> updateDashboard());
 
-        controlPanel.add(filterLabel);
-        controlPanel.add(timePeriodCombo);
-        controlPanel.add(Box.createHorizontalGlue());
-
-        panel.add(controlPanel, BorderLayout.EAST);
+        panel.add(filterLabel);
+        panel.add(timePeriodCombo);
 
         return panel;
     }
@@ -143,10 +151,10 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         panel.setLayout(new GridLayout(1, 4, 15, 15));
         panel.setBackground(BG_COLOR);
 
-        balanceLabel = createStatCard("Total Balance", "$0.00", PRIMARY_DARK, "💰");
+        balanceLabel = createStatCard("Total Balance", "$0.00", PRIMARY_DARK, "●");
         incomeLabel = createStatCard("Total Income", "$0.00", INCOME_COLOR, "↑");
         expenseLabel = createStatCard("Total Expense", "$0.00", EXPENSE_COLOR, "↓");
-        transactionCountLabel = createStatCard("Transactions", "0", ACCENT_COLOR, "📊");
+        transactionCountLabel = createStatCard("Transactions", "0", ACCENT_COLOR, "█");
 
         panel.add(balanceLabel.getParent());
         panel.add(incomeLabel.getParent());
@@ -156,11 +164,10 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         return panel;
     }
 
-    private JLabel createStatCard(String title, String value, Color accentColor, String icon) {
+    private JLabel createStatCard(String title, String value, Color accentColor, String symbol) {
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
         cardPanel.setBackground(CARD_BG);
-        cardPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Shadow effect
         cardPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -168,13 +175,22 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
             BorderFactory.createLineBorder(BORDER_COLOR, 1)
         ));
 
+        // Set padding inside card
+        cardPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(3, 3, 5, 5),
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER_COLOR, 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)
+            )
+        ));
+
         // Icon and title row
         JPanel titleRow = new JPanel();
         titleRow.setLayout(new BoxLayout(titleRow, BoxLayout.X_AXIS));
         titleRow.setBackground(CARD_BG);
 
-        JLabel iconLabel = new JLabel(icon);
-        iconLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        JLabel iconLabel = new JLabel(symbol);
+        iconLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         iconLabel.setForeground(accentColor);
 
         JLabel titleLabel = new JLabel(title);
@@ -197,7 +213,7 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         accentBar.setPreferredSize(new Dimension(Integer.MAX_VALUE, 3));
 
         cardPanel.add(accentBar);
-        cardPanel.add(Box.createVerticalStrut(12));
+        cardPanel.add(Box.createVerticalStrut(8));
         cardPanel.add(titleRow);
         cardPanel.add(Box.createVerticalStrut(8));
         cardPanel.add(valueLabel);
@@ -212,9 +228,38 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         panel.setBackground(BG_COLOR);
 
         try {
-            // Pie Chart - Expenses by Category
-            JPanel piePanel = createChartCardPanel("Expenses by Category", createExpenseChart());
-            panel.add(piePanel);
+            // Pie Chart Panel with Dropdown
+            JPanel pieWrapperPanel = new JPanel();
+            pieWrapperPanel.setLayout(new BorderLayout(0, 10));
+            pieWrapperPanel.setBackground(BG_COLOR);
+
+            // Dropdown for pie chart type
+            JPanel pieControlPanel = new JPanel();
+            pieControlPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+            pieControlPanel.setBackground(BG_COLOR);
+
+            JLabel pieTypeLabel = new JLabel("View: ");
+            pieTypeLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+            pieTypeLabel.setForeground(PRIMARY_DARK);
+
+            String[] pieTypes = {"Expenses", "Income"};
+            pieTypeCombo = new JComboBox<>(pieTypes);
+            pieTypeCombo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+            pieTypeCombo.setBackground(CARD_BG);
+            pieTypeCombo.setForeground(PRIMARY_DARK);
+            pieTypeCombo.setFocusable(false);
+            pieTypeCombo.addActionListener(e -> updateDashboard());
+
+            pieControlPanel.add(pieTypeLabel);
+            pieControlPanel.add(pieTypeCombo);
+
+            pieWrapperPanel.add(pieControlPanel, BorderLayout.NORTH);
+
+            // Pie Chart
+            JPanel piePanel = createChartCardPanel("Category Distribution", createExpenseChart());
+            pieWrapperPanel.add(piePanel, BorderLayout.CENTER);
+
+            panel.add(pieWrapperPanel);
 
             // Bar Chart - Income vs Expense by Time Period
             JPanel barPanel = createChartCardPanel("Income vs Expense Trend", createBarChart());
@@ -250,12 +295,24 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
 
     private ChartPanel createExpenseChart() throws DatabaseException {
         DefaultPieDataset dataset = new DefaultPieDataset();
-        Map<String, Double> expensesByCategory = reportService.getExpensesByCategory();
+        String chartType = (String) pieTypeCombo.getSelectedItem();
+        
+        Map<String, Double> categoryData = new HashMap<>();
+        
+        java.util.List<Transaction> allTransactions = transactionService.getAllTransactions();
+        
+        for (Transaction t : allTransactions) {
+            if ((chartType.equals("Expenses") && "EXPENSE".equals(t.getType())) ||
+                (chartType.equals("Income") && "INCOME".equals(t.getType()))) {
+                String catName = t.getCategory().getName();
+                categoryData.put(catName, categoryData.getOrDefault(catName, 0.0) + t.getAmount());
+            }
+        }
 
-        if (expensesByCategory.isEmpty()) {
+        if (categoryData.isEmpty()) {
             dataset.setValue("No Data", 100);
         } else {
-            for (Map.Entry<String, Double> entry : expensesByCategory.entrySet()) {
+            for (Map.Entry<String, Double> entry : categoryData.entrySet()) {
                 dataset.setValue(entry.getKey(), entry.getValue());
             }
         }

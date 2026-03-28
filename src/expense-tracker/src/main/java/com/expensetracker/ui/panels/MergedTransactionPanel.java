@@ -54,7 +54,8 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
     }
 
     private void setupUI() {
-        setLayout(new BorderLayout(0, 0));
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         setBackground(BG_COLOR);
 
         // Header
@@ -63,7 +64,7 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
 
         // Main Content with split view
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setDividerLocation(320);
+        splitPane.setDividerLocation(300);
         splitPane.setDividerSize(8);
         splitPane.setBackground(BG_COLOR);
 
@@ -84,7 +85,7 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setBackground(PRIMARY_DARK);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
@@ -110,7 +111,7 @@ public class MergedTransactionPanel extends JPanel implements UIUpdateListener {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(CARD_BG);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         // Form Title
         JLabel formTitleLabel = new JLabel("Add New Transaction");
