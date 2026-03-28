@@ -1,3 +1,4 @@
+com\expensetracker\ui\panels\MergedTransactionPanel$4.class
 com\expensetracker\ui\panels\TransactionPanel.class
 com\expensetracker\ui\UIUpdateManager.class
 com\expensetracker\ui\panels\HistoryPanel$3.class
@@ -8,7 +9,9 @@ com\expensetracker\persistence\CategoryDAO.class
 com\expensetracker\services\DashboardService.class
 com\expensetracker\ui\panels\HistoryPanel.class
 com\expensetracker\models\Category.class
+com\expensetracker\ui\panels\MergedTransactionPanel$1.class
 com\expensetracker\models\Expense.class
+com\expensetracker\ui\panels\MergedTransactionPanel$2.class
 com\expensetracker\utils\CurrencyUtils.class
 com\expensetracker\ui\panels\CategoryPanel$2.class
 com\expensetracker\ui\panels\IntegratedDashboardPanel$2.class
@@ -16,9 +19,11 @@ com\expensetracker\ui\panels\IntegratedDashboardPanel.class
 com\expensetracker\utils\DateUtils.class
 com\expensetracker\ExpenseTrackerApp.class
 com\expensetracker\ui\panels\TransactionPanel$1.class
+com\expensetracker\ui\panels\ModernDashboardPanel.class
 com\expensetracker\exceptions\ValidationException.class
 com\expensetracker\persistence\DatabaseConnection.class
 com\expensetracker\persistence\TransactionDAO.class
+com\expensetracker\ui\panels\MergedTransactionPanel$5.class
 com\expensetracker\utils\ValidationUtils.class
 com\expensetracker\ui\MainFrame.class
 com\expensetracker\ui\panels\CategoryPanel$3.class
@@ -26,6 +31,7 @@ com\expensetracker\services\ReportService.class
 com\expensetracker\ui\panels\HistoryPanel$2.class
 com\expensetracker\models\Income.class
 com\expensetracker\ui\panels\HistoryPanel$1.class
+com\expensetracker\ui\panels\ModernDashboardPanel$1.class
 com\expensetracker\ui\panels\CategoryPanel$1.class
 com\expensetracker\ui\panels\IntegratedDashboardPanel$1.class
 com\expensetracker\exceptions\DatabaseException.class
@@ -34,5 +40,7 @@ com\expensetracker\ui\panels\DashboardPanel.class
 com\expensetracker\models\Transaction.class
 com\expensetracker\models\TransactionFilter.class
 com\expensetracker\exceptions\TransactionException.class
+com\expensetracker\ui\panels\MergedTransactionPanel$3.class
+com\expensetracker\ui\panels\MergedTransactionPanel.class
 com\expensetracker\persistence\DatabaseInitializer.class
 com\expensetracker\ui\panels\CategoryPanel.class

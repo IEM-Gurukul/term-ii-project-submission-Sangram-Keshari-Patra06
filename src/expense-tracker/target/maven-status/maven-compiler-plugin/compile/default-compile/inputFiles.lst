@@ -4,12 +4,14 @@ D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\e
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ui\panels\HistoryPanel.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ExpenseTrackerApp.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\models\Category.java
+D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ui\panels\ModernDashboardPanel.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\utils\ValidationUtils.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\exceptions\TransactionException.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\exceptions\ValidationException.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ui\panels\TransactionPanel.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\services\ReportService.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ui\MainFrame.java
+D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ui\panels\MergedTransactionPanel.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ui\UIUpdateListener.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\services\DashboardService.java
 D:\Sangram\IEM\PROJECTS\term-ii-project-submission-Sangram-Keshari-Patra06\src\expense-tracker\src\main\java\com\expensetracker\ui\panels\IntegratedDashboardPanel.java

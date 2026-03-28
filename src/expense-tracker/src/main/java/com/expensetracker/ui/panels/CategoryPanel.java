@@ -10,17 +10,24 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 /**
- * Panel for managing categories with improved UI
+ * Panel for managing categories with professional monochromatic design
  */
 public class CategoryPanel extends JPanel {
     private CategoryService categoryService;
     private JTable categoryTable;
     private DefaultTableModel tableModel;
 
-    // Color scheme
-    private static final Color PRIMARY_COLOR = new Color(52, 152, 219);
-    private static final Color SUCCESS_COLOR = new Color(46, 204, 113);
-    private static final Color HEADER_COLOR = new Color(236, 240, 241);
+    // Professional Monochromatic Color Scheme
+    private static final Color PRIMARY_DARK = new Color(44, 62, 80);      // #2C3E50
+    private static final Color PRIMARY_LIGHT = new Color(236, 240, 241);  // #ECF0F1
+    private static final Color ACCENT_COLOR = new Color(52, 152, 219);    // #3498DB
+    private static final Color ACCENT_HOVER = new Color(41, 128, 185);    // #2980B9
+    private static final Color SUCCESS_COLOR = new Color(39, 174, 96);    // #27AE60
+    private static final Color CARD_BG = new Color(255, 255, 255);        // #FFFFFF
+    private static final Color TEXT_SECONDARY = new Color(127, 140, 141); // #7F8C8D
+    private static final Color BORDER_COLOR = new Color(189, 195, 199);   // #BDC3C7
+    private static final Color BG_COLOR = new Color(236, 240, 241);       // #ECF0F1
+    private static final Color INPUT_BG = new Color(250, 250, 250);       // #FAFAFA
 
     public CategoryPanel() throws DatabaseException {
         this.categoryService = new CategoryService();
@@ -31,7 +38,7 @@ public class CategoryPanel extends JPanel {
     private void setupUI() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBackground(new Color(240, 240, 245));
+        setBackground(BG_COLOR);
 
         // Header
         JPanel headerPanel = createHeaderPanel();
@@ -52,13 +59,13 @@ public class CategoryPanel extends JPanel {
         categoryTable = new JTable(tableModel);
         styleTable(categoryTable);
         JScrollPane scrollPane = new JScrollPane(categoryTable);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 1));
+        scrollPane.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
         add(scrollPane, BorderLayout.CENTER);
     }
 
     private JPanel createHeaderPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(PRIMARY_COLOR);
+        panel.setBackground(PRIMARY_DARK);
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         JLabel titleLabel = new JLabel("Manage Categories");
@@ -67,11 +74,11 @@ public class CategoryPanel extends JPanel {
 
         JLabel subtitleLabel = new JLabel("Create and manage expense/income categories");
         subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        subtitleLabel.setForeground(new Color(236, 240, 241));
+        subtitleLabel.setForeground(PRIMARY_LIGHT);
 
         JPanel textPanel = new JPanel();
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
-        textPanel.setBackground(PRIMARY_COLOR);
+        textPanel.setBackground(PRIMARY_DARK);
         textPanel.add(titleLabel);
         textPanel.add(Box.createVerticalStrut(5));
         textPanel.add(subtitleLabel);
@@ -82,7 +89,7 @@ public class CategoryPanel extends JPanel {
 
     private void styleTable(JTable table) {
         JTableHeader header = table.getTableHeader();
-        header.setBackground(new Color(52, 73, 94));
+        header.setBackground(PRIMARY_DARK);
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Segoe UI", Font.BOLD, 12));
         header.setPreferredSize(new Dimension(0, 30));
@@ -90,8 +97,8 @@ public class CategoryPanel extends JPanel {
         table.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         table.setRowHeight(25);
         table.setShowGrid(true);
-        table.setGridColor(new Color(189, 195, 199));
-        table.setSelectionBackground(new Color(52, 152, 219));
+        table.setGridColor(BORDER_COLOR);
+        table.setSelectionBackground(ACCENT_COLOR);
         table.setSelectionForeground(Color.WHITE);
 
         table.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
@@ -100,7 +107,7 @@ public class CategoryPanel extends JPanel {
                     boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 if (!isSelected) {
-                    c.setBackground(row % 2 == 0 ? Color.WHITE : HEADER_COLOR);
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(248, 249, 250));
                 }
                 return c;
             }
@@ -112,16 +119,16 @@ public class CategoryPanel extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(10, 10, 10, 10),
-            BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(189, 195, 199)), "Add New Category", 0, 0, new Font("Segoe UI", Font.BOLD, 12))
+            BorderFactory.createTitledBorder(BorderFactory.createLineBorder(BORDER_COLOR), "Add New Category", 0, 0, new Font("Segoe UI", Font.BOLD, 12))
         ));
-        panel.setBackground(new Color(250, 250, 250));
+        panel.setBackground(CARD_BG);
         panel.setPreferredSize(new Dimension(180, 300));
 
         // Category Name
         panel.add(createLabel("Category Name:"));
         JTextField nameField = new JTextField(15);
         nameField.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        nameField.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 1));
+        nameField.setBorder(BorderFactory.createLineBorder(BORDER_COLOR, 1));
         nameField.setMaximumSize(new Dimension(160, 30));
         panel.add(nameField);
         panel.add(Box.createVerticalStrut(10));
@@ -147,7 +154,7 @@ public class CategoryPanel extends JPanel {
 
         addButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                addButton.setBackground(new Color(39, 174, 96));
+                addButton.setBackground(new Color(33, 150, 83));
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 addButton.setBackground(SUCCESS_COLOR);

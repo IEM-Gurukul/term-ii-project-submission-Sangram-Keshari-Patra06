@@ -36,9 +36,8 @@ public class MainFrame extends JFrame {
         tabbedPane.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
 
         try {
-            tabbedPane.addTab("📊 Dashboard", new IntegratedDashboardPanel());
-            tabbedPane.addTab("➕ Transactions", new TransactionPanel());
-            tabbedPane.addTab("📋 History", new HistoryPanel());
+            tabbedPane.addTab("📊 Dashboard", new ModernDashboardPanel());
+            tabbedPane.addTab("💳 Transactions", new MergedTransactionPanel());
             tabbedPane.addTab("🏷️ Categories", new CategoryPanel());
         } catch (DatabaseException e) {
             JOptionPane.showMessageDialog(this, "Error loading panels: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
