@@ -13,10 +13,10 @@ import java.util.Map;
 /**
  * Panel for data visualization
  */
-public class ChartPanel extends JPanel {
+public class ExpenseChartPanel extends JPanel {
     private ReportService reportService;
 
-    public ChartPanel() throws DatabaseException {
+    public ExpenseChartPanel() throws DatabaseException {
         this.reportService = new ReportService();
         setupUI();
     }

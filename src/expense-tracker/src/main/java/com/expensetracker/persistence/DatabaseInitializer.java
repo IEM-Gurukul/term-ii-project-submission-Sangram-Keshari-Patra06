@@ -31,18 +31,28 @@ public class DatabaseInitializer {
 
     public static void initializeDatabase() throws DatabaseException {
         try {
+            System.out.println("Initializing database...");
             Connection connection = DatabaseConnection.getInstance().getConnection();
             Statement statement = connection.createStatement();
 
             // Create tables
+            System.out.println("Creating categories table...");
             statement.execute(CREATE_CATEGORIES_TABLE);
+            System.out.println("Categories table created.");
+            
+            System.out.println("Creating transactions table...");
             statement.execute(CREATE_TRANSACTIONS_TABLE);
+            System.out.println("Transactions table created.");
 
             // Insert default categories
+            System.out.println("Inserting default categories...");
             insertDefaultCategories(connection);
+            System.out.println("Database initialization completed successfully.");
 
             statement.close();
         } catch (Exception e) {
+            System.err.println("Error initializing database: " + e.getMessage());
+            e.printStackTrace();
             throw new DatabaseException("Failed to initialize database", e);
         }
     }

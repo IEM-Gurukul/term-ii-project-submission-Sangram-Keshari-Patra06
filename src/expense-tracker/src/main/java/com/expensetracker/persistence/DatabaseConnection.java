@@ -11,14 +11,35 @@ import java.io.File;
 public class DatabaseConnection {
     private static DatabaseConnection instance;
     private Connection connection;
-    private static final String DB_PATH = "expensetracker_db.db";
+    private static final String DB_PATH = System.getProperty("user.home") + File.separator + "expensetracker_db.db";
 
     private DatabaseConnection() throws DatabaseException {
         try {
+            File dbFile = new File(DB_PATH);
+            String absolutePath = dbFile.getAbsolutePath();
+            System.out.println("Database file absolute path: " + absolutePath);
+
+            // Ensure parent directory exists
+            File parentDir = dbFile.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                System.out.println("Creating parent directory: " + parentDir.getAbsolutePath());
+                if (!parentDir.mkdirs()) {
+                    System.err.println("Failed to create parent directory");
+                }
+            }
+
+            if (!dbFile.exists()) {
+                System.out.println("Database file does not exist. It will be created automatically.");
+            }
+
             Class.forName("org.sqlite.JDBC");
-            String dbUrl = "jdbc:sqlite:" + DB_PATH;
+            String dbUrl = "jdbc:sqlite:" + absolutePath;
+            System.out.println("Connecting to database at: " + dbUrl);
             this.connection = DriverManager.getConnection(dbUrl);
+            System.out.println("Database connection established successfully.");
         } catch (Exception e) {
+            System.err.println("Error during database initialization: " + e.getMessage());
+            e.printStackTrace();
             throw new DatabaseException("Failed to connect to database", e);
         }
     }

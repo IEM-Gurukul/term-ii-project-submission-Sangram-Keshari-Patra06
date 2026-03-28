@@ -39,7 +39,7 @@ public class MainFrame extends JFrame {
             tabbedPane.addTab("Transactions", new TransactionPanel());
             tabbedPane.addTab("History", new HistoryPanel());
             tabbedPane.addTab("Categories", new CategoryPanel());
-            tabbedPane.addTab("Charts", new ChartPanel());
+            tabbedPane.addTab("Charts", new ExpenseChartPanel());
         } catch (DatabaseException e) {
             JOptionPane.showMessageDialog(this, "Error loading panels: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
