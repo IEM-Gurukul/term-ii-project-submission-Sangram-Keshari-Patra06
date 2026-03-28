@@ -1,0 +1,14 @@
+package com.expensetracker.exceptions;
+
+/**
+ * Custom exception for validation-related errors
+ */
+public class ValidationException extends Exception {
+    public ValidationException(String message) {
+        super(message);
+    }
+
+    public ValidationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
