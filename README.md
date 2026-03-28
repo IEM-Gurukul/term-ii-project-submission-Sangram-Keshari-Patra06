@@ -44,79 +44,57 @@ The app follows the MVVM (Model-View-ViewModel) pattern, which is the industry s
 
 ---
 
-## Installation Steps
-
-1. Download the ZIP file from this repository.
-2. Extract the ZIP file to your local machine.
-3. Open the extracted folder in Android Studio.
-4. Build the project (Android Studio will download all required SDK components automatically).
-5. Locate the generated APK file in `app/build/outputs/apk/release/`.
-6. Install the APK file on your Android device.
-7. Start using the Expense Tracker app!
-
-## Requirements
-- Android Studio (latest version recommended)
-- Android SDK (API 21 or above)
-
 ## Git Discipline Notes
 Minimum 10 meaningful commits required.
 
 
-# file structure
-
-D:/Sangram/IEM/PROJECTS/term-ii-project-submission-Sangram-Keshari-Patra06/
-├── .idea
-├── docs
-├── report
-├── slides`
-└── src
-└── main
-├── AndroidManifest.xml
-├── java
-│   └── com
-│       └── project
-│           └── expensetracker
-│               ├── data
-│               │   ├── local
-│               │   │   ├── dao
-│               │   │   │   └── TransactionDao.java
-│               │   │   ├── entity
-│               │   │   │   ├── Category.java
-│               │   │   │   └── Transaction.java
-│               │   │   ├── AppDatabase.java
-│               │   │   └── Converters.java
-│               │   └── repository
-│               │       └── TransactionRepository.java
-│               ├── interfaces
-│               │   └── OnItemClickListener.java
-│               ├── ui
-│               │   ├── activities
-│               │   │   ├── AddTransactionActivity.java
-│               │   │   ├── BaseActivity.java
-│               │   │   └── MainActivity.java
-│               │   ├── adapters
-│               │   │   └── TransactionAdapter.java
-│               │   └── fragments
-│               │       ├── DashboardFragment.java
-│               │       └── HistoryFragment.java
-│               ├── utils
-│               │   ├── AppExecutors.java
-│               │   ├── Constants.java
-│               │   └── FormatUtils.java
-│               └── viewmodel
-│                   ├── DashboardViewModel.java
-│                   └── TransactionViewModel.java
-└── res
-├── layout
-│   ├── activity_add_transaction.xml
-│   ├── activity_main.xml
-│   ├── fragment_dashboard.xml
-│   ├── fragment_history.xml
-│   └── item_transaction.xml
-├── menu
-│   └── main_menu.xml
-└── values
-├── colors.xml
-└── strings.xml
-
+# file structure of the application
+```
+expense-tracker/
+├── pom.xml (Maven configuration with SQLite, JFreeChart, and JUnit dependencies)
+├── src/
+│   ├── main/
+│   │   ├── java/com/expensetracker/
+│   │   │   ├── ExpenseTrackerApp.java (Main entry point)
+│   │   │   ├── exceptions/ (3 custom exception classes)
+│   │   │   │   ├── DatabaseException.java
+│   │   │   │   ├── ValidationException.java
+│   │   │   │   └── TransactionException.java
+│   │   │   ├── models/ (5 model classes)
+│   │   │   │   ├── Transaction.java (abstract base class)
+│   │   │   │   ├── Income.java
+│   │   │   │   ├── Expense.java
+│   │   │   │   ├── Category.java
+│   │   │   │   └── TransactionFilter.java
+│   │   │   ├── persistence/ (DAO & Database classes)
+│   │   │   │   ├── DatabaseConnection.java (Singleton pattern)
+│   │   │   │   ├── DatabaseInitializer.java
+│   │   │   │   ├── TransactionDAO.java
+│   │   │   │   └── CategoryDAO.java
+│   │   │   ├── services/ (Business logic layer)
+│   │   │   │   ├── TransactionService.java
+│   │   │   │   ├── CategoryService.java
+│   │   │   │   ├── DashboardService.java
+│   │   │   │   └── ReportService.java
+│   │   │   ├── ui/ (Swing GUI components)
+│   │   │   │   ├── MainFrame.java
+│   │   │   │   └── panels/
+│   │   │   │       ├── DashboardPanel.java
+│   │   │   │       ├── TransactionPanel.java
+│   │   │   │       ├── HistoryPanel.java
+│   │   │   │       ├── CategoryPanel.java
+│   │   │   │       └── ChartPanel.java
+│   │   │   └── utils/ (Helper utilities)
+│   │   │       ├── DateUtils.java
+│   │   │       ├── CurrencyUtils.java
+│   │   │       └── ValidationUtils.java
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/
+│       └── java/com/expensetracker/
+│           ├── services/
+│           │   └── TransactionServiceTest.java
+│           └── persistence/
+│               └── TransactionDAOTest.java
+```
 ---
