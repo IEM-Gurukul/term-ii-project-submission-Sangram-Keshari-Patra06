@@ -40,6 +40,7 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
     private JLabel transactionCountLabel;
     private ChartPanel chartPanel;
     private ChartPanel barChartPanel;
+    private JPanel pieChartContainer;
     private JComboBox<String> timePeriodCombo;
     private JComboBox<String> pieTypeCombo;
     private java.util.Timer refreshTimer;
@@ -138,7 +139,13 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
         timePeriodCombo.setBackground(CARD_BG);
         timePeriodCombo.setForeground(PRIMARY_DARK);
         timePeriodCombo.setFocusable(false);
-        timePeriodCombo.addActionListener(e -> updateDashboard());
+        timePeriodCombo.addActionListener(e -> {
+            try {
+                updateBarChart();
+            } catch (DatabaseException ex) {
+                JOptionPane.showMessageDialog(null, "Error updating chart: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         panel.add(filterLabel);
         panel.add(timePeriodCombo);
@@ -229,9 +236,9 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
 
         try {
             // Pie Chart Panel with Dropdown
-            JPanel pieWrapperPanel = new JPanel();
-            pieWrapperPanel.setLayout(new BorderLayout(0, 10));
-            pieWrapperPanel.setBackground(BG_COLOR);
+            pieChartContainer = new JPanel();
+            pieChartContainer.setLayout(new BorderLayout(0, 10));
+            pieChartContainer.setBackground(BG_COLOR);
 
             // Dropdown for pie chart type
             JPanel pieControlPanel = new JPanel();
@@ -248,18 +255,18 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
             pieTypeCombo.setBackground(CARD_BG);
             pieTypeCombo.setForeground(PRIMARY_DARK);
             pieTypeCombo.setFocusable(false);
-            pieTypeCombo.addActionListener(e -> updateDashboard());
+            pieTypeCombo.addActionListener(e -> updatePieChart());
 
             pieControlPanel.add(pieTypeLabel);
             pieControlPanel.add(pieTypeCombo);
 
-            pieWrapperPanel.add(pieControlPanel, BorderLayout.NORTH);
+            pieChartContainer.add(pieControlPanel, BorderLayout.NORTH);
 
             // Pie Chart
             JPanel piePanel = createChartCardPanel("Category Distribution", createExpenseChart());
-            pieWrapperPanel.add(piePanel, BorderLayout.CENTER);
+            pieChartContainer.add(piePanel, BorderLayout.CENTER);
 
-            panel.add(pieWrapperPanel);
+            panel.add(pieChartContainer);
 
             // Bar Chart - Income vs Expense by Time Period
             JPanel barPanel = createChartCardPanel("Income vs Expense Trend", createBarChart());
@@ -448,9 +455,42 @@ public class ModernDashboardPanel extends JPanel implements UIUpdateListener {
             incomeLabel.setText(CurrencyUtils.formatCurrencyWithDollar(income));
             expenseLabel.setText(CurrencyUtils.formatCurrencyWithDollar(expense));
             transactionCountLabel.setText(String.valueOf(count));
+            
+            // Update charts
+            updatePieChart();
         } catch (DatabaseException e) {
             JOptionPane.showMessageDialog(this, "Error updating dashboard: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void updatePieChart() {
+        try {
+            // Remove old chart from container
+            if (pieChartContainer != null) {
+                Component[] components = pieChartContainer.getComponents();
+                for (Component comp : components) {
+                    if (comp != pieChartContainer.getComponent(0)) {
+                        pieChartContainer.remove(comp);
+                    }
+                }
+                
+                // Create and add new pie chart
+                JPanel piePanel = createChartCardPanel("Category Distribution", createExpenseChart());
+                pieChartContainer.add(piePanel, BorderLayout.CENTER);
+                
+                // Refresh display
+                pieChartContainer.revalidate();
+                pieChartContainer.repaint();
+            }
+        } catch (DatabaseException e) {
+            JOptionPane.showMessageDialog(this, "Error updating pie chart: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void updateBarChart() throws DatabaseException {
+        // This will be called when time period changes
+        // The bar chart updates are handled by the auto-refresh timer
+        // but we can trigger an immediate update here if needed
     }
 
     @Override
