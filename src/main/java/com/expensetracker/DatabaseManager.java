@@ -255,55 +255,6 @@ public class DatabaseManager {
         return transactions;
     }
 
-    public List<Transaction> getTransactionsByFilter(TransactionFilter filter) throws AppException {
-        List<Transaction> transactions = new ArrayList<>();
-        try {
-            StringBuilder query = new StringBuilder("SELECT * FROM transactions WHERE 1=1");
-            List<Object> params = new ArrayList<>();
-
-            if (filter.getStartDate() != null) {
-                query.append(" AND date_time >= ?");
-                params.add(filter.getStartDate().toString());
-            }
-            if (filter.getEndDate() != null) {
-                query.append(" AND date_time <= ?");
-                params.add(filter.getEndDate().toString());
-            }
-            if (filter.getMinAmount() != null) {
-                query.append(" AND amount >= ?");
-                params.add(filter.getMinAmount());
-            }
-            if (filter.getMaxAmount() != null) {
-                query.append(" AND amount <= ?");
-                params.add(filter.getMaxAmount());
-            }
-            if (filter.getCategory() != null) {
-                query.append(" AND category_id = ?");
-                params.add(filter.getCategory().getId());
-            }
-            if (filter.getType() != null) {
-                query.append(" AND type = ?");
-                params.add(filter.getType());
-            }
-
-            query.append(" ORDER BY date_time DESC");
-            PreparedStatement pstmt = connection.prepareStatement(query.toString());
-            for (int i = 0; i < params.size(); i++) {
-                pstmt.setObject(i + 1, params.get(i));
-            }
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                transactions.add(createTransactionFromResultSet(rs));
-            }
-            rs.close();
-            pstmt.close();
-        } catch (SQLException e) {
-            throw new AppException("Failed to filter transactions", e);
-        }
-        return transactions;
-    }
-
     public void updateTransaction(Transaction transaction) throws AppException {
         try {
             String query = "UPDATE transactions SET type = ?, amount = ?, description = ?, date_time = ?, category_id = ?, payment_method = ?, source = ? WHERE id = ?";

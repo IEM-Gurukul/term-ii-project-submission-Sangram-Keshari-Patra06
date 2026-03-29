@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDateTime;
 
-public class AppPanel extends JPanel {
+public class TransactionsPanel extends JPanel {
     private AppService service;
     private JTable transactionTable;
     private DefaultTableModel tableModel;
@@ -15,105 +15,60 @@ public class AppPanel extends JPanel {
     private JTextField amountField, descField;
     private JComboBox<Category> categoryCombo;
 
-    public AppPanel() throws AppException {
+    public TransactionsPanel() throws AppException {
         service = new AppService();
-        setupUI();
-        loadTransactions();
-    }
-
-    private void setupUI() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBackground(new Color(240, 240, 240));
-
-        JPanel formPanel = createFormPanel();
-        add(formPanel, BorderLayout.NORTH);
-
-        JPanel tablePanel = createTablePanel();
-        add(tablePanel, BorderLayout.CENTER);
-    }
-
-    private JPanel createFormPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createTitledBorder("Add Transaction"));
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(new JLabel("Type:"), gbc);
+        
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        formPanel.add(new JLabel("Type:"));
+        
         typeCombo = new JComboBox<>(new String[]{"INCOME", "EXPENSE"});
-        gbc.gridx = 1;
-        panel.add(typeCombo, gbc);
-
-        gbc.gridx = 2;
-        panel.add(new JLabel("Amount:"), gbc);
-        amountField = new JTextField("0.00", 10);
-        gbc.gridx = 3;
-        panel.add(amountField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 1;
-        panel.add(new JLabel("Category:"), gbc);
+        formPanel.add(typeCombo);
+        
+        formPanel.add(new JLabel("Amount:"));
+        amountField = new JTextField(8);
+        formPanel.add(amountField);
+        
+        formPanel.add(new JLabel("Category:"));
         categoryCombo = new JComboBox<>();
-        gbc.gridx = 1;
-        panel.add(categoryCombo, gbc);
-
-        gbc.gridx = 2;
-        panel.add(new JLabel("Description:"), gbc);
+        formPanel.add(categoryCombo);
+        
+        formPanel.add(new JLabel("Description:"));
         descField = new JTextField(15);
-        gbc.gridx = 3;
-        panel.add(descField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 2;
+        formPanel.add(descField);
+        
         JButton addBtn = new JButton("Add");
         addBtn.addActionListener(e -> addTransaction());
-        panel.add(addBtn, gbc);
-
-        JButton clearBtn = new JButton("Clear");
-        clearBtn.addActionListener(e -> clearFields());
-        gbc.gridx = 1;
-        panel.add(clearBtn, gbc);
-
+        formPanel.add(addBtn);
+        
         JButton deleteBtn = new JButton("Delete");
         deleteBtn.addActionListener(e -> deleteTransaction());
-        gbc.gridx = 2;
-        panel.add(deleteBtn, gbc);
-
+        formPanel.add(deleteBtn);
+        
         JButton refreshBtn = new JButton("Refresh");
         refreshBtn.addActionListener(e -> loadTransactions());
-        gbc.gridx = 3;
-        panel.add(refreshBtn, gbc);
-
-        typeCombo.addActionListener(e -> updateCategories());
-        updateCategories();
-
-        return panel;
-    }
-
-    private JPanel createTablePanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createTitledBorder("Transactions"));
-
+        formPanel.add(refreshBtn);
+        
+        add(formPanel, BorderLayout.NORTH);
+        
         String[] columns = {"ID", "Type", "Amount", "Category", "Description", "Date"};
         tableModel = new DefaultTableModel(columns, 0) {
-            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-
+        
         transactionTable = new JTable(tableModel);
         transactionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        transactionTable.setRowHeight(25);
-
+        
         JScrollPane scrollPane = new JScrollPane(transactionTable);
-        panel.add(scrollPane, BorderLayout.CENTER);
-
-        return panel;
+        add(scrollPane, BorderLayout.CENTER);
+        
+        typeCombo.addActionListener(e -> updateCategories());
+        updateCategories();
+        loadTransactions();
     }
 
     private void updateCategories() {
@@ -136,11 +91,11 @@ public class AppPanel extends JPanel {
             Category cat = (Category) categoryCombo.getSelectedItem();
 
             if (amount <= 0) {
-                JOptionPane.showMessageDialog(this, "Amount must be > 0", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Amount must be positive");
                 return;
             }
             if (desc.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Description required", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Description required");
                 return;
             }
 
@@ -153,19 +108,20 @@ public class AppPanel extends JPanel {
 
             service.createTransaction(trans);
             JOptionPane.showMessageDialog(this, "Transaction added");
-            clearFields();
+            amountField.setText("");
+            descField.setText("");
             loadTransactions();
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Invalid amount", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Invalid amount");
         } catch (AppException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
     }
 
     private void deleteTransaction() {
         int row = transactionTable.getSelectedRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Select a transaction", "Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Select a transaction");
             return;
         }
 
@@ -175,14 +131,8 @@ public class AppPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Transaction deleted");
             loadTransactions();
         } catch (AppException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-    }
-
-    private void clearFields() {
-        amountField.setText("0.00");
-        descField.setText("");
-        typeCombo.setSelectedIndex(0);
     }
 
     private void loadTransactions() {

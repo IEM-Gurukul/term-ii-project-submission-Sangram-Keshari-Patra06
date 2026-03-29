@@ -20,27 +20,33 @@
 ## Core Features
 
 - CRUD Operations: Create, Read, Update, and Delete transactions (Income/Expenses).
-- Dynamic Dashboard: Real-time calculation of total balance using Live Data.
+- Dynamic Dashboard: Real-time calculation of total balance with live data updates.
 - Category Management: Pre-defined and custom categories for efficient tracking.
-- Persistence: Local storage using the Room Persistence Library (SQLite abstraction).
-- Data Visualization: Integrated charts to show percentage-based spending per category.
+- Persistence: Local storage using SQLite database.
+- Data Visualization: Integrated charts (Pie Chart, Bar Chart) to show spending distribution by category.
 - Search & History: Filterable transaction history by date range or amount.
+- Three-Tab Interface: Dashboard, Transactions, and Categories management in a single window.
 
 ---
 
 ## OOP Concepts Used
 
-- Abstraction: Implementation of Data Access Objects (DAO) to define database interactions without exposing internal SQL logic.
-- Inheritance: Use of extends for UI components (e.g., BaseActivity) and inheriting from AndroidViewModel to maintain state across configuration changes.
-- Polymorphism: Method overriding in RecyclerView Adapters (e.g., onBindViewHolder) to handle different data display logic dynamically.
-- Exception Handling: Implementation of try-catch-finally blocks for database I/O operations and handling NullPointerExceptions during view binding.
-- Collections / Threads: Use of List<Transaction> and ArrayList for data sorting. Multithreading
-  is handled via Executors or AsyncTask (legacy/simplified) to ensure database operations don't block the Main UI Thread.
+- **Abstraction**: Implementation of Data Access Objects (DAO) to define database interactions without exposing internal SQL logic.
+- **Inheritance**: Use of extends for UI components and inheriting from base service classes to maintain consistent behavior.
+- **Polymorphism**: Method overriding in different panel classes (DashboardPanel, TransactionsPanel, CategoriesPanel) to handle different data display logic dynamically.
+- **Exception Handling**: Implementation of try-catch-finally blocks for database I/O operations and handling NullPointerExceptions during view binding.
+- **Collections**: Use of List<Transaction>, ArrayList, and Map for data sorting and categorization. HashMaps store expense-by-category data for pie chart visualization.
+- **Threading**: Database operations are handled to prevent blocking the Main UI Thread.
 
 ---
 
 ## Proposed Architecture Description
-The app follows the MVVM (Model-View-ViewModel) pattern, which is the industry standard for robust Android apps built in Java. The View (XML/Activity) is responsible for the UI; the ViewModel retrieves data from the repository and exposes it; the Model consists of the Room Database and Entities. This separation ensures that the business logic and the UI are separate, making the code easier to maintain, test, and allow room for improvements.
+The app follows the MVVM (Model-View-ViewModel) pattern, which is the industry standard for robust applications built in Java. 
+- **View Layer**: Three separate UI panels (DashboardPanel, TransactionsPanel, CategoriesPanel) managed by MainFrame with tabbed navigation.
+- **ViewModel/Service Layer**: AppService provides business logic and retrieves data from the database without exposing implementation details to the UI.
+- **Model Layer**: Entities (Transaction, Income, Expense, Category) and the SQLite Database.
+
+This separation ensures that the business logic and the UI are separate, making the code easier to maintain, test, and allowing room for improvements.
 
 ---
 
@@ -63,7 +69,10 @@ com.expensetracker/
 │   ├── Expense.java
 │   └── TransactionFilter.java
 └── ui/
-    ├── MainFrame.java
-    └── AppPanel.java (consolidated UI)
+    ├── MainFrame.java          (main application window with tabbed interface)
+    ├── DashboardPanel.java     (dashboard with charts and statistics)
+    ├── TransactionsPanel.java  (transaction management interface)
+    └── CategoriesPanel.java    (category management interface)
 ```
+
 ---
