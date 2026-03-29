@@ -50,10 +50,33 @@ This separation ensures that the business logic and the UI are separate, making 
 
 ---
 
-## Git Discipline Notes
-Minimum 10 meaningful commits required.
+## How to Run
 
+### Prerequisites:
+- Java JDK 8 or higher
+- Maven 3.6+
+- git
 
+### Setup Instructions:
+1. clone the repository
+2. build the project using maven
+   ```bash
+   mvn clean package
+   ```
+4. run the application
+   ```bash
+   java -jar target/expense-tracker-1.0.0.jar
+   ```
+   or, if you use the shaded JAR (with dependencies):
+   ```bash
+   java -jar target/expense-tracker-1.0.0-jar-with-dependencies.jar
+   ```
+
+### Notes
+- The application uses an SQLite database file, which will be created automatically in the project directory on first run.
+- If you encounter any issues with missing dependencies, ensure Maven has internet access to download them.
+
+---
 # file structure of the application
 ```
 com.expensetracker/
@@ -74,5 +97,8 @@ com.expensetracker/
     ├── TransactionsPanel.java  (transaction management interface)
     └── CategoriesPanel.java    (category management interface)
 ```
+
+## Git Discipline Notes
+Minimum 10 meaningful commits required.
 
 ---
