@@ -50,51 +50,20 @@ Minimum 10 meaningful commits required.
 
 # file structure of the application
 ```
-expense-tracker/
-├── pom.xml (Maven configuration with SQLite, JFreeChart, and JUnit dependencies)
-├── src/
-│   ├── main/
-│   │   ├── java/com/expensetracker/
-│   │   │   ├── ExpenseTrackerApp.java (Main entry point)
-│   │   │   ├── exceptions/ (3 custom exception classes)
-│   │   │   │   ├── DatabaseException.java
-│   │   │   │   ├── ValidationException.java
-│   │   │   │   └── TransactionException.java
-│   │   │   ├── models/ (5 model classes)
-│   │   │   │   ├── Transaction.java (abstract base class)
-│   │   │   │   ├── Income.java
-│   │   │   │   ├── Expense.java
-│   │   │   │   ├── Category.java
-│   │   │   │   └── TransactionFilter.java
-│   │   │   ├── persistence/ (DAO & Database classes)
-│   │   │   │   ├── DatabaseConnection.java (Singleton pattern)
-│   │   │   │   ├── DatabaseInitializer.java
-│   │   │   │   ├── TransactionDAO.java
-│   │   │   │   └── CategoryDAO.java
-│   │   │   ├── services/ (Business logic layer)
-│   │   │   │   ├── TransactionService.java
-│   │   │   │   ├── CategoryService.java
-│   │   │   │   ├── DashboardService.java
-│   │   │   │   └── ReportService.java
-│   │   │   ├── ui/ (Swing GUI components)
-│   │   │   │   ├── MainFrame.java
-│   │   │   │   └── panels/
-│   │   │   │       ├── DashboardPanel.java
-│   │   │   │       ├── TransactionPanel.java
-│   │   │   │       ├── HistoryPanel.java
-│   │   │   │       ├── CategoryPanel.java
-│   │   │   │       └── ChartPanel.java
-│   │   │   └── utils/ (Helper utilities)
-│   │   │       ├── DateUtils.java
-│   │   │       ├── CurrencyUtils.java
-│   │   │       └── ValidationUtils.java
-│   │   └── resources/
-│   │       └── application.properties
-│   └── test/
-│       └── java/com/expensetracker/
-│           ├── services/
-│           │   └── TransactionServiceTest.java
-│           └── persistence/
-│               └── TransactionDAOTest.java
+com.expensetracker/
+├── AppException.java (handles all errors)
+├── AppService.java (all business logic)
+├── AppUtils.java (all utilities)
+├── DatabaseManager.java (all DB operations)
+├── ExpenseTrackerApp.java (entry point)
+├── models/
+│   ├── Category.java
+│   ├── Transaction.java
+│   ├── Income.java
+│   ├── Expense.java
+│   └── TransactionFilter.java
+└── ui/
+    ├── MainFrame.java
+    └── AppPanel.java (consolidated UI)
 ```
 ---
